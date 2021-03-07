@@ -25,7 +25,7 @@ func listenAndServe(s *backend.Server) error {
 }
 
 func main() {
-	log.Printf("Started")
+	log.Printf("INFO version:%s commit:%s buildtime:%s\n", BuildVersion, BuildCommit, BuildTime)
 
 	s := backend.NewServer()
 	s.Routes()
