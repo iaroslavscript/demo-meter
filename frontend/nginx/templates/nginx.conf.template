@@ -1,0 +1,21 @@
+upstream backend {
+    server ${NGINX_UPSTREAM_BACKEND_SERVER};
+}
+
+server {
+    listen       ${NGINX_PORT};
+    server_name  ${NGINX_SERVERNAME};
+
+    gzip on;
+    gzip_types text/plain application/json;
+
+    root   /usr/share/nginx/html;
+
+    location = / {
+        try_files /index.html =404;
+    }
+
+    location / {
+        proxy_pass ${NGINX_UPSTREAM_BACKEND_SCHEME}://backend$uri;
+    }
+}
