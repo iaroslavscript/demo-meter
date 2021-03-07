@@ -13,12 +13,12 @@ func listenAndServe(s *backend.Server) error {
 
 	go func() {
 		log.Printf("Start serving at 2112")
-		done <- http.ListenAndServe("127.0.0.1:2112", s.MetricsMux)
+		done <- http.ListenAndServe("0.0.0.0:2112", s.MetricsMux)
 	}()
 
 	go func() {
 		log.Printf("Start serving at 8080")
-		done <- http.ListenAndServe("127.0.0.1:8080", s.ServerMux)
+		done <- http.ListenAndServe("0.0.0.0:8080", s.ServerMux)
 	}()
 
 	return <-done
