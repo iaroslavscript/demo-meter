@@ -1,5 +1,8 @@
 # syntax = docker/dockerfile:1.2
-FROM nginx:1.19.7-alpine
+
+ARG flovar=alpine
+
+FROM nginx:1.19.7-$flovar
 
 LABEL author="Iaroslav Akimov"
 
