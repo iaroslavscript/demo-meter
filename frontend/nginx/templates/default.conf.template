@@ -15,16 +15,19 @@ server {
         try_files /index.html =404;
     }
 
-    #location /123 {
-    #    default_type text/html;
-    #    rewrite ^ /index.html break;
-
-    #
-    #    subs_filter_types text/html;
-    #    subs_filter 'Hello' 'Morning';
-    #}
-
-    location / {
-        proxy_pass ${NGINX_UPSTREAM_BACKEND_SCHEME}://backend$uri;
+    location ~ ^/data/(.+)$ {
+        
+        proxy_pass ${NGINX_UPSTREAM_BACKEND_SCHEME}://backend/$1;
     }
+
+    location ~ ^/([A-Za-z0-9]+) {
+        set $arg $1;
+
+        default_type text/html;
+        rewrite ^ /index.html break;
+
+        subs_filter_types text/html;
+        subs_filter '%%URL%%' '/data/$arg';
+    }
+
 }
