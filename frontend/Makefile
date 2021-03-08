@@ -11,4 +11,4 @@ help: Makefile
 	@echo "\tdocker-build\tBuild docker image"
 
 docker-build:
-	DOCKER_BUILDKIT=1 docker build --build-arg flovar=alpine -t frontend:$(VERSION) .
+	DOCKER_BUILDKIT=1 docker build --build-arg flovar=buster -t frontend:$(VERSION) .
