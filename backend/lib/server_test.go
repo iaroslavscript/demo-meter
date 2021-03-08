@@ -69,7 +69,7 @@ func TestApiClient(t *testing.T) {
 		t.Errorf("error creating request %v", err)
 	}
 
-	resp, err = s.ApiCall(req)
+	resp, err = s.ApiClient.Do(req)
 
 	body, err = ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
@@ -83,3 +83,68 @@ func TestApiClient(t *testing.T) {
 		t.Errorf("expected: %v, got: %v", want, got)
 	}
 }
+
+func TestApiCall(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, "{\"message\": \"Hello World!\", \"x\": \"y\"}")
+	}))
+	defer ts.Close()
+
+	log.SetOutput(ioutil.Discard)
+	s := NewServer()
+	s.Routes()
+
+	var req *http.Request
+	var err error
+
+	type testObj struct {
+		Message string `json:"message"`
+	}
+
+	req, err = http.NewRequest("GET", ts.URL, nil)
+
+	if err != nil {
+		t.Errorf("error creating request %v", err)
+	}
+
+	obj := testObj{}
+	err = s.ApiCall(req, &obj)
+
+	got := obj.Message
+	want := "Hello World!"
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("expected: %v, got: %v", want, got)
+	}
+}
+
+/*func TestRequestQuestion(t *testing.T) {
+	dataID := "48d75c359ce4"
+
+	log.SetOutput(ioutil.Discard)
+	s := NewServer()
+	s.Routes()
+
+	data, err := s.requestQuestion(dataID)
+	if err != nil {
+		t.Errorf("error creating request %v", err)
+	}
+
+	t.Errorf("Got %v", data.Question)
+}*/
+
+/*
+func TestRequestQuestionResult(t *testing.T) {
+	dataID := "48d75c359ce4"
+
+	log.SetOutput(ioutil.Discard)
+	s := NewServer()
+	s.Routes()
+
+	data, err := s.requestResult(dataID)
+	if err != nil {
+		t.Errorf("error creating request %v", err)
+	}
+
+	t.Errorf("Got %v", data.Results)
+}*/

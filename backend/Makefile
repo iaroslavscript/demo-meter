@@ -8,12 +8,13 @@ OUTPUT ?= "./app"
 # Use linker flags to provide version/build settings
 LDFLAGS=-ldflags "-X 'main.BuildVersion=$(VERSION)' -X 'main.BuildTime=$(DATETIME)' -X 'main.BuildCommit=$(BUILD)'"
 
-.PHONY: all build fmt test
+.PHONY: all help build go-deps go-build fmt-check fmt-fix test docker-build
 
 all: help
 
 help: Makefile
 	@echo "Available commands:"
+	@echo "\thelp\t\tShow this help"
 	@echo "\tbuild\t\tCombined call of fmt-check, test, go-build"
 	@echo "\tgo-build\tCompile go files and bulid application"
 	@echo "\tgo-deps\t\tDownload dependencies without building the project"
