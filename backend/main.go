@@ -1,24 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
 	backend "github.com/iaroslavscript/demo-meter/backend/lib"
 )
 
-func listenAndServe(s *backend.Server) error {
+func listenAndServe(s *backend.Server, cfg *backend.Config) error {
 
 	done := make(chan error)
 
 	go func() {
-		log.Printf("Start serving at 2112")
-		done <- http.ListenAndServe("0.0.0.0:2112", s.MetricsMux)
+		addr := fmt.Sprintf("%s:%d", cfg.MetricsBindAddr, cfg.MetricsBindPort)
+		log.Printf("Start serving metrict at %s", addr)
+		done <- http.ListenAndServe(addr, s.MetricsMux)
 	}()
 
 	go func() {
-		log.Printf("Start serving at 8080")
-		done <- http.ListenAndServe("0.0.0.0:8080", s.ServerMux)
+
+		addr := fmt.Sprintf("%s:%d", cfg.ServerBindAddr, cfg.ServerBindPort)
+		log.Printf("Start serving at %s", addr)
+		done <- http.ListenAndServe(addr, s.ServerMux)
 	}()
 
 	return <-done
@@ -27,8 +31,12 @@ func listenAndServe(s *backend.Server) error {
 func main() {
 	log.Printf("INFO version:%s commit:%s buildtime:%s\n", BuildVersion, BuildCommit, BuildTime)
 
+	cfg := backend.NewConfig()
+	cfg.PopulateFromEnv()
+
 	s := backend.NewServer()
+	s.ApiEntrypoint = cfg.ApiEntrypoint
 	s.Routes()
 
-	log.Fatal(listenAndServe(s))
+	log.Fatal(listenAndServe(s, cfg))
 }

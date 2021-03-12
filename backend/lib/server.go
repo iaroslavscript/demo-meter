@@ -12,9 +12,10 @@ import (
 )
 
 type Server struct {
-	ApiClient  *http.Client
-	ServerMux  *http.ServeMux
-	MetricsMux *http.ServeMux
+	ApiClient     *http.Client
+	ApiEntrypoint string
+	ServerMux     *http.ServeMux
+	MetricsMux    *http.ServeMux
 }
 
 func (s *Server) Routes() {
@@ -144,9 +145,8 @@ func (s *Server) requestQuestion(dataID string) (*Question, error) {
 	var req *http.Request
 	var err error
 	data := Question{}
-	entrypoint := "https://api.mentimeter.com"
 
-	url := fmt.Sprintf("%s/questions/%s", entrypoint, dataID)
+	url := fmt.Sprintf("%s/questions/%s", s.ApiEntrypoint, dataID)
 	if req, err = http.NewRequest("GET", url, nil); err != nil {
 		return &data, err
 	}
@@ -164,8 +164,7 @@ func (s *Server) requestResult(dataID string) (*QuestionResult, error) {
 	var req *http.Request
 	var err error
 
-	entrypoint := "https://api.mentimeter.com"
-	url := fmt.Sprintf("%s/questions/%s/result", entrypoint, dataID)
+	url := fmt.Sprintf("%s/questions/%s/result", s.ApiEntrypoint, dataID)
 	if req, err = http.NewRequest("GET", url, nil); err != nil {
 		return nil, err
 	}
