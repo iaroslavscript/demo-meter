@@ -118,11 +118,14 @@ func TestApiCall(t *testing.T) {
 	}
 }
 
-/*func TestRequestQuestion(t *testing.T) {
+/*
+func TestRequestQuestion(t *testing.T) {
 	dataID := "48d75c359ce4"
+	entrypoint := "https://api.mentimeter.com"
 
 	log.SetOutput(ioutil.Discard)
 	s := NewServer()
+	s.ApiEntrypoint = entrypoint
 	s.Routes()
 
 	data, err := s.requestQuestion(dataID)
@@ -131,14 +134,15 @@ func TestApiCall(t *testing.T) {
 	}
 
 	t.Errorf("Got %v", data.Question)
-}*/
+}
 
-/*
 func TestRequestQuestionResult(t *testing.T) {
 	dataID := "48d75c359ce4"
+	entrypoint := "https://api.mentimeter.com"
 
 	log.SetOutput(ioutil.Discard)
 	s := NewServer()
+	s.ApiEntrypoint = entrypoint
 	s.Routes()
 
 	data, err := s.requestResult(dataID)
@@ -147,4 +151,5 @@ func TestRequestQuestionResult(t *testing.T) {
 	}
 
 	t.Errorf("Got %v", data.Results)
-}*/
+}
+*/
