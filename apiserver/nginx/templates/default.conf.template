@@ -9,7 +9,7 @@ server {
         try_files /index.html =404;
     }
 
-    location ~ ^/([A-Za-z0-9]+)/result {
+    location ~ ^/questions/([A-Za-z0-9]+)/result {
         add_header Last-Modified "";
         add_header Content-Type application/json;
 
@@ -26,7 +26,7 @@ server {
         try_files /$1_result.json =404;
     }
 
-    location ~ ^/([A-Za-z0-9]+) {
+    location ~ ^/questions/([A-Za-z0-9]+) {
         add_header Last-Modified "";
         add_header Content-Type application/json;
 
