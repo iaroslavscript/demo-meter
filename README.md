@@ -45,6 +45,20 @@ Backend accepts enviroment variables listed below:
 
 # Testing
 
+## Testing. Docker compose
+
+Docker compose file available at `./compose/` directory.
+Usage example:
+
+```
+root@localhost:~# cd ./compose
+root@localhost:~/compose# docker builder prune
+root@localhost:~/compose# VERSION=latest docker compose build
+root@localhost:~/compose# VERSION=latest docker compose up
+```
+
+## Testing. Staging API server
+
 ### Staging API Server
 
 For testing and development purpose there is a simple implementation of API server. It serves static json files stored at `VOLUME /usr/share/nginx/html/`
