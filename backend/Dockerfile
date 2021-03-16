@@ -25,6 +25,14 @@ RUN --mount=type=bind,target=/usr/src/app \
 FROM golang:1.16.0-$alpine_flovar AS final
 LABEL author="Iaroslav Akimov"
 
+# wait-for depends on netcat
+RUN --mount=type=cache,target=/etc/apk/cache,mode=0777,rw\
+    apk add netcat-openbsd
+
+RUN --mount=type=bind,target=/usr/src/app \
+    cp /usr/src/app/tools/wait-for.sh /usr/local/bin/wait-for \
+    && chmod 0777 /usr/local/bin/wait-for
+
 ENTRYPOINT ["/opt/app"]
 
 # server http port

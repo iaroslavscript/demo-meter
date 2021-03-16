@@ -3,8 +3,8 @@ upstream backend {
 }
 
 server {
-    listen       ${NGINX_PORT};
-    server_name  ${NGINX_SERVERNAME};
+    listen ${NGINX_DEFAULT_SERVER_ADDR}:${NGINX_DEFAULT_SERVER_PORT} default_server;
+    server_name _;
 
     gzip on;
     gzip_types text/plain application/json;

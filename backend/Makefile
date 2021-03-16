@@ -35,10 +35,11 @@ fmt-check:
 	[ -z "$$(gofmt -l $(GOFILES))" ] || (echo "Run 'make fmt-fix' to fix style errors first!" && exit 1)
 
 fmt-fix:
-	go fmt */**
+	go fmt ./...
 
 test:
-	go test -v */**
+	go test -v ./...
 
 docker-build:
 	DOCKER_BUILDKIT=1 docker build --build-arg alpine_flovar=alpine3.13 -t backend:$(VERSION) .
+

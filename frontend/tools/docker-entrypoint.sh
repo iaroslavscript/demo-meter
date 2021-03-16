@@ -3,6 +3,8 @@
 
 set -e
 
+echo "DEBUG: $0 $@"
+
 if [ -z "${NGINX_ENTRYPOINT_QUIET_LOGS:-}" ]; then
     exec 3>&1
 else
@@ -10,11 +12,11 @@ else
 fi
 
 if [ "$1" = "nginx" -o "$1" = "nginx-debug" ]; then
-    if /usr/bin/find "/docker-entrypoint.d/" -mindepth 1 -maxdepth 1 -type f -print -quit 2>/dev/null | read v; then
-        echo >&3 "$0: /docker-entrypoint.d/ is not empty, will attempt to perform configuration"
+    if /usr/bin/find "${NGINX_ENTRYPOINT_D}/docker-entrypoint.d/" -mindepth 1 -maxdepth 1 -type f -print -quit 2>/dev/null | read v; then
+        echo >&3 "$0: ${NGINX_ENTRYPOINT_D}/docker-entrypoint.d/ is not empty, will attempt to perform configuration"
 
-        echo >&3 "$0: Looking for shell scripts in /docker-entrypoint.d/"
-        find "/docker-entrypoint.d/" -follow -type f -print | sort -n | while read -r f; do
+        echo >&3 "$0: Looking for shell scripts in ${NGINX_ENTRYPOINT_D}/docker-entrypoint.d/"
+        find "${NGINX_ENTRYPOINT_D}/docker-entrypoint.d/" -follow -type f -print | sort -n | while read -r f; do
             case "$f" in
                 *.sh)
                     if [ -x "$f" ]; then
@@ -31,7 +33,7 @@ if [ "$1" = "nginx" -o "$1" = "nginx-debug" ]; then
 
         echo >&3 "$0: Configuration complete; ready for start up"
     else
-        echo >&3 "$0: No files found in /docker-entrypoint.d/, skipping configuration"
+        echo >&3 "$0: No files found in ${NGINX_ENTRYPOINT_D}/docker-entrypoint.d/, skipping configuration"
     fi
 fi
 

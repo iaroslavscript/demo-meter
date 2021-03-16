@@ -8,8 +8,9 @@ LABEL author="Iaroslav Akimov"
 
 # this env variables are also used by nginx at runtime, 
 # see /etc/nginx/templates/*.template
-ENV NGINX_DEFAULT_SERVER_ADDR="0.0.0.0"
-ENV NGINX_DEFAULT_SERVER_PORT="80"
+ENV \
+    NGINX_DEFAULT_SERVER_ADDR="0.0.0.0" \
+    NGINX_DEFAULT_SERVER_PORT="8080"
 
 RUN --mount=type=bind,target=/usr/src/app \
     mkdir -p /etc/nginx/templates/ \

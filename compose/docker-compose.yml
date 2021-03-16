@@ -1,0 +1,51 @@
+---
+version: "3.9"  # optional since v1.27.0
+services:
+  front:
+    build:
+      context: ./../frontend/
+      args:
+        - flovar=buster
+    image: frontend:${VERSION}
+    entrypoint: "wait-for backend:8080 -t 30 -- /docker-entrypoint.sh" 
+    command: ["nginx", "-g", "daemon off;"]
+    environment:
+      - "NGINX_DEFAULT_SERVER_ADDR=0.0.0.0"
+      - "NGINX_DEFAULT_SERVER_PORT=8080"
+      - "NGINX_UPSTREAM_BACKEND_SERVER=backend:8080"
+      - "NGINX_UPSTREAM_BACKEND_SCHEME=http"
+    ports:
+      - "8080:8080"
+    links:
+      - backend
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./../backend/
+      args:
+        - alpine_flovar=alpine3.13
+    image: backend:${VERSION}
+    entrypoint: "wait-for apiserver:8081 -- /opt/app"
+    environment:
+      - "APP_API_ENTRYPOINT=http://apiserver:8080"
+      - "APP_SERVER_BIND_ADDR=0.0.0.0"
+      - "APP_SERVER_BIND_PORT=8080"
+      - "APP_METRICS_BIND_ADDR=0.0.0.0"
+      - "APP_METRICS_BIND_PORT=2112"
+    links:
+      - apiserver
+    depends_on:
+      - apiserver
+
+  apiserver:
+    build:
+      context: ./../apiserver/
+      args:
+        - flovar=alpine
+    image: apiserver:${VERSION}
+    environment:
+      - "NGINX_DEFAULT_SERVER_ADDR=0.0.0.0"
+      - "NGINX_DEFAULT_SERVER_PORT=8080"
+
